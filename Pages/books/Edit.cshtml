@@ -1,0 +1,45 @@
+﻿@page
+@model nastasiu_iana_lab2.Pages.books.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="book.ID" />
+            <div class="form-group">
+                <label asp-for="book.Title" class="control-label"></label>
+                <input asp-for="book.Title" class="form-control" />
+                <span asp-validation-for="book.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="book.AuthorID" class="control-label">Author</label>
+                <select asp-for="book.AuthorID" class="form-control" asp-items="ViewBag.AuthorID"></select>
+                <span asp-validation-for="book.AuthorID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="book.Price" class="control-label"></label>
+                <input asp-for="book.Price" class="form-control" />
+                <span asp-validation-for="book.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
