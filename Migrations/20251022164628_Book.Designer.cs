@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using nastasiu_iana_lab2.Data;
 
@@ -11,9 +12,11 @@ using nastasiu_iana_lab2.Data;
 namespace nastasiu_iana_lab2.Migrations
 {
     [DbContext(typeof(nastasiu_iana_lab2Context))]
-    partial class nastasiu_iana_lab2ContextModelSnapshot : ModelSnapshot
+    [Migration("20251022164628_Book")]
+    partial class Book
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

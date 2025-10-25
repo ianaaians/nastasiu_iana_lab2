@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using nastasiu_iana_lab2.Data;
 
@@ -11,9 +12,11 @@ using nastasiu_iana_lab2.Data;
 namespace nastasiu_iana_lab2.Migrations
 {
     [DbContext(typeof(nastasiu_iana_lab2Context))]
-    partial class nastasiu_iana_lab2ContextModelSnapshot : ModelSnapshot
+    [Migration("20251019195855_BookCategory")]
+    partial class BookCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,39 +44,6 @@ namespace nastasiu_iana_lab2.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Author");
-                });
-
-            modelBuilder.Entity("nastasiu_iana_lab2.Models.Book", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int?>("AuthorID")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(6,2)");
-
-                    b.Property<int?>("PublisherID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PublishingDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("AuthorID");
-
-                    b.HasIndex("PublisherID");
-
-                    b.ToTable("Book");
                 });
 
             modelBuilder.Entity("nastasiu_iana_lab2.Models.BookCategory", b =>
@@ -133,24 +103,42 @@ namespace nastasiu_iana_lab2.Migrations
                     b.ToTable("Publisher");
                 });
 
-            modelBuilder.Entity("nastasiu_iana_lab2.Models.Book", b =>
+            modelBuilder.Entity("nastasiu_iana_lab2.Models.book", b =>
                 {
-                    b.HasOne("nastasiu_iana_lab2.Models.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorID");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasOne("nastasiu_iana_lab2.Models.Publisher", "Publisher")
-                        .WithMany("books")
-                        .HasForeignKey("PublisherID");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Navigation("Author");
+                    b.Property<int?>("AuthorID")
+                        .HasColumnType("int");
 
-                    b.Navigation("Publisher");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(6,2)");
+
+                    b.Property<int?>("PublisherID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PublishingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("AuthorID");
+
+                    b.HasIndex("PublisherID");
+
+                    b.ToTable("book");
                 });
 
             modelBuilder.Entity("nastasiu_iana_lab2.Models.BookCategory", b =>
                 {
-                    b.HasOne("nastasiu_iana_lab2.Models.Book", "Book")
+                    b.HasOne("nastasiu_iana_lab2.Models.book", "Book")
                         .WithMany("BookCategories")
                         .HasForeignKey("BookID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -167,9 +155,19 @@ namespace nastasiu_iana_lab2.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("nastasiu_iana_lab2.Models.Book", b =>
+            modelBuilder.Entity("nastasiu_iana_lab2.Models.book", b =>
                 {
-                    b.Navigation("BookCategories");
+                    b.HasOne("nastasiu_iana_lab2.Models.Author", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorID");
+
+                    b.HasOne("nastasiu_iana_lab2.Models.Publisher", "Publisher")
+                        .WithMany("books")
+                        .HasForeignKey("PublisherID");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Publisher");
                 });
 
             modelBuilder.Entity("nastasiu_iana_lab2.Models.Category", b =>
@@ -180,6 +178,11 @@ namespace nastasiu_iana_lab2.Migrations
             modelBuilder.Entity("nastasiu_iana_lab2.Models.Publisher", b =>
                 {
                     b.Navigation("books");
+                });
+
+            modelBuilder.Entity("nastasiu_iana_lab2.Models.book", b =>
+                {
+                    b.Navigation("BookCategories");
                 });
 #pragma warning restore 612, 618
         }

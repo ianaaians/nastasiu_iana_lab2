@@ -4,7 +4,8 @@ using System.Security.Policy;
 
 namespace nastasiu_iana_lab2.Models
 {
-    public class book
+    [Table("Book")]
+    public class Book
     {
         public int ID { get; set; }
         [Display(Name ="Book title")]
@@ -18,5 +19,6 @@ namespace nastasiu_iana_lab2.Models
         public DateTime PublishingDate { get; set; }
         public int? PublisherID { get; set; }
         public Publisher? Publisher { get; set; }
+        public ICollection<BookCategory>? BookCategories { get; set; } =new List<BookCategory>();
     }
 }
