@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿//using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -20,27 +22,58 @@ namespace nastasiu_iana_lab2.Pages.Books
         public BookData BookD { get; set; }
         public int BookID { get; set; }
         public int CategoryID { get; set; }
-        public async Task OnGetAsync(int? id, int? categoryID)
+
+        public string TitleSort { get; set; }
+        public string AuthorSort { get; set; }
+        public string CurrentFilter { get; set; }
+
+        public async Task OnGetAsync(int? id, int? categoryID, string sortOrder, string searchString)
         {
-            BookD=new BookData();
+            BookD = new BookData();
+
+            TitleSort = sortOrder == "title_asc" ? "title_desc" : "title_asc";
+            AuthorSort = sortOrder == "author_asc" ? "author_desc" : "author_asc";
+
+            CurrentFilter = searchString;
+
             BookD.Books = await _context.Book
                 .Include(b => b.Publisher)
                 .Include(b => b.Author)
-                .Include(b => b.BookCategories)
-                    .ThenInclude(bc => bc.Category)
+                .Include(b => b.BookCategories).ThenInclude(bc => bc.Category)
                 .AsNoTracking()
-                .OrderBy(b=> b.Title)
                 .ToListAsync();
 
-            Book = (IList<Book>)BookD.Books;
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                var s = searchString.Trim();
+                BookD.Books = BookD.Books.Where(b =>
+                    (b.Title?.Contains(s, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (b.Author?.FirstName?.Contains(s, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (b.Author?.LastName?.Contains(s, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                    (b.Author?.FullName?.Contains(s, StringComparison.OrdinalIgnoreCase) ?? false));
+            }
 
             if (id != null)
-                {
+            {
                 BookID = id.Value;
-                Book Book = BookD.Books
-                    .Where(b => b.ID == id.Value).Single();
-                BookD.Categories = Book.BookCategories.Select(bc => bc.Category);
+                var bsel = BookD.Books.FirstOrDefault(b => b.ID == id.Value);
+                if (bsel != null)
+                    BookD.Categories = bsel.BookCategories.Select(bc => bc.Category);
             }
+
+            if (!string.IsNullOrEmpty(sortOrder))
+            {
+                BookD.Books = sortOrder switch
+                {
+                    "title_asc" => BookD.Books.OrderBy(s => s.Title),
+                    "title_desc" => BookD.Books.OrderByDescending(s => s.Title),
+                    "author_asc" => BookD.Books.OrderBy(s => s.Author?.FullName),
+                    "author_desc" => BookD.Books.OrderByDescending(s => s.Author?.FullName),
+                    _ => BookD.Books
+                };
+            }
+
+            Book = BookD.Books.ToList();
         }
     }
 }

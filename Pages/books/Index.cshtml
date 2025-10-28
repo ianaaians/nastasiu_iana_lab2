@@ -11,42 +11,65 @@
     <a asp-page="Create">Create New</a>
 </p>
 
+<form asp-page="./Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find Book by Title / Author Name:
+            <input type="text" name="SearchString" value="@Model.CurrentFilter" />
+            <input type="submit" value="Search" class="btn btn-primary" /> |
+            <a asp-page="./Index"
+               asp-route-searchString=""
+               asp-route-sortOrder=""
+               asp-route-id=""
+               asp-route-categoryID="">
+                Back to full List
+            </a>
+        </p>
+    </div>
+</form>
+
+
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(m => m.Book[0].Title)</th>
-            <th>Author</th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.TitleSort">
+                    @Html.DisplayNameFor(m => m.Book[0].Title)
+                </a>
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.AuthorSort">
+                    @Html.DisplayNameFor(m => m.Book[0].Author)
+                </a>
+            </th>
             <th>@Html.DisplayNameFor(m => m.Book[0].Price)</th>
             <th>@Html.DisplayNameFor(m => m.Book[0].PublishingDate)</th>
             <th>@Html.DisplayNameFor(m => m.Book[0].Publisher.PublisherName)</th>
             <th>Category</th>
-            <th> @Html.DisplayNameFor(Model => Model.Book[0].BookCategories) </th>
-            <th></th>
+            <th></th> <!-- actions -->
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Book)
-        {
-            <tr>
-                <td>@Html.DisplayFor(_ => item.Title)</td>
-                <td>@($"{item.Author?.FirstName} {item.Author?.LastName}")</td>
-                <td>@Html.DisplayFor(_ => item.Price)</td>
-                <td>@Html.DisplayFor(_ => item.PublishingDate)</td>
-                <td>@item.Publisher?.PublisherName</td>
-                <td>
-                    @string.Join(", ",
+    @foreach (var item in Model.Book)
+    {
+        <tr>
+            <td>@Html.DisplayFor(_ => item.Title)</td>
+            <td>@($"{item.Author?.FirstName} {item.Author?.LastName}")</td>
+            <td>@Html.DisplayFor(_ => item.Price)</td>
+            <td>@Html.DisplayFor(_ => item.PublishingDate)</td>
+            <td>@item.Publisher?.PublisherName</td>
+            <td>
+                @string.Join(", ",
                     (item.BookCategories ?? Enumerable.Empty<nastasiu_iana_lab2.Models.BookCategory>())
-                    .Select(bc => bc.Category?.CategoryName)
-                    .Where(name => !string.IsNullOrWhiteSpace(name))
-                                )
+                        .Select(bc => bc.Category?.CategoryName)
+                        .Where(name => !string.IsNullOrWhiteSpace(name)))
             </td>
             <td>
                 <a asp-page="/books/Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-page="/books/Details" asp-route-id="@item.ID">Details</a> |
                 <a asp-page="/books/Delete" asp-route-id="@item.ID">Delete</a>
             </td>
-
         </tr>
-                }
+    }
     </tbody>
 </table>
