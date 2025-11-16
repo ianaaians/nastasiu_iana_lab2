@@ -1,9 +1,10 @@
-﻿using nastasiu_iana_lab2.Data;
-using nastasiu_iana_lab2.Models;
-using nastasiu_iana_lab2.Models.ViewModels;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using nastasiu_iana_lab2.Data;
+using nastasiu_iana_lab2.Models;
+using nastasiu_iana_lab2.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace nastasiu_iana_lab2.Pages.Publishers
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly nastasiu_iana_lab2.Data.nastasiu_iana_lab2Context _context;
